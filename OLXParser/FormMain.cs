@@ -55,7 +55,12 @@ namespace OLXParser
             this.Enabled = false;
             for (int i = 1; i <= pagesCount; ++i)
             {
-                string url = textBoxURL.Text + "&page=" + i;
+                string url = textBoxURL.Text;
+                if (url.IndexOf('?') != -1)
+                    url += "&page=" + i;
+                else
+                    url += "?page=" + i;
+
                 List<string> urls = new List<string>();
                 try
                 {
