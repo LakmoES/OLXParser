@@ -150,10 +150,7 @@ namespace OLXParser
                 }
                 this.progressBarExport.Value = this.progressBarExport.Maximum;
                 if (error != null)
-                {
-                    MessageBox.Show(error, "Ошибка");
-                    return;
-                }
+                    MessageBox.Show(error, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
                 Process.Start(folderBrowserDialog1.SelectedPath);
                 MessageBox.Show("Процесс выгрузки БД прошел успешно.", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
