@@ -36,8 +36,10 @@
             this.buttonExportDB = new System.Windows.Forms.Button();
             this.buttonClearDB = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.label1 = new System.Windows.Forms.Label();
             this.labelAdvertCount = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.progressBarMain = new System.Windows.Forms.ProgressBar();
+            this.progressBarExport = new System.Windows.Forms.ProgressBar();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPages)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -53,7 +55,7 @@
             // 
             // buttonStart
             // 
-            this.buttonStart.Location = new System.Drawing.Point(41, 135);
+            this.buttonStart.Location = new System.Drawing.Point(36, 164);
             this.buttonStart.Name = "buttonStart";
             this.buttonStart.Size = new System.Drawing.Size(75, 23);
             this.buttonStart.TabIndex = 1;
@@ -74,11 +76,6 @@
             // numericUpDownPages
             // 
             this.numericUpDownPages.Location = new System.Drawing.Point(9, 19);
-            this.numericUpDownPages.Maximum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
             this.numericUpDownPages.Minimum = new decimal(new int[] {
             1,
             0,
@@ -105,7 +102,7 @@
             // 
             // buttonExportDB
             // 
-            this.buttonExportDB.Location = new System.Drawing.Point(6, 48);
+            this.buttonExportDB.Location = new System.Drawing.Point(6, 82);
             this.buttonExportDB.Name = "buttonExportDB";
             this.buttonExportDB.Size = new System.Drawing.Size(75, 23);
             this.buttonExportDB.TabIndex = 5;
@@ -125,40 +122,56 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.progressBarExport);
             this.groupBox3.Controls.Add(this.labelAdvertCount);
             this.groupBox3.Controls.Add(this.label1);
             this.groupBox3.Controls.Add(this.buttonExportDB);
             this.groupBox3.Controls.Add(this.buttonClearDB);
-            this.groupBox3.Location = new System.Drawing.Point(184, 135);
+            this.groupBox3.Location = new System.Drawing.Point(175, 135);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(98, 114);
+            this.groupBox3.Size = new System.Drawing.Size(107, 145);
             this.groupBox3.TabIndex = 7;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "База данных";
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 83);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(53, 13);
-            this.label1.TabIndex = 8;
-            this.label1.Text = "Записей:";
-            // 
             // labelAdvertCount
             // 
             this.labelAdvertCount.AutoSize = true;
-            this.labelAdvertCount.Location = new System.Drawing.Point(58, 83);
+            this.labelAdvertCount.Location = new System.Drawing.Point(65, 119);
             this.labelAdvertCount.Name = "labelAdvertCount";
             this.labelAdvertCount.Size = new System.Drawing.Size(10, 13);
             this.labelAdvertCount.TabIndex = 9;
             this.labelAdvertCount.Text = "-";
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(6, 119);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(53, 13);
+            this.label1.TabIndex = 8;
+            this.label1.Text = "Записей:";
+            // 
+            // progressBarMain
+            // 
+            this.progressBarMain.Location = new System.Drawing.Point(12, 135);
+            this.progressBarMain.Name = "progressBarMain";
+            this.progressBarMain.Size = new System.Drawing.Size(126, 23);
+            this.progressBarMain.TabIndex = 8;
+            // 
+            // progressBarExport
+            // 
+            this.progressBarExport.Location = new System.Drawing.Point(6, 59);
+            this.progressBarExport.Name = "progressBarExport";
+            this.progressBarExport.Size = new System.Drawing.Size(75, 23);
+            this.progressBarExport.TabIndex = 9;
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(289, 261);
+            this.ClientSize = new System.Drawing.Size(287, 289);
+            this.Controls.Add(this.progressBarMain);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -189,6 +202,8 @@
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Label labelAdvertCount;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ProgressBar progressBarMain;
+        private System.Windows.Forms.ProgressBar progressBarExport;
     }
 }
 
