@@ -21,7 +21,7 @@ namespace OLXParser.Parsers
             {
                 string foundHref = obj.GetAttribute("href");
 
-                if (foundHref != null && foundHref.IndexOf("http://olx.ua/obyavlenie") == 0)
+                if (foundHref != null && foundHref.IndexOf("olx.ua/obyavlenie") != -1)
                 {
                     foundHref = foundHref.Replace(";promoted", String.Empty);
                     if (!result.Exists(x => x.Equals(foundHref)))
