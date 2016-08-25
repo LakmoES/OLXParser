@@ -13,6 +13,7 @@ using GalaSoft.MvvmLight.Threading;
 using OLXParser.Parsers;
 using OLXParser.TableRepositories;
 using OLXParserWPF.Messages;
+using OLXParser;
 
 namespace OLXParserWPF.ViewModel
 {
@@ -24,6 +25,10 @@ namespace OLXParserWPF.ViewModel
         {
             WindowIsEnabled = true;
             Pages = 1;
+            MainProgressMaximum = 1;
+            MainProgressValue = 0;
+            ExportProgressMaximum = 1;
+            ExportProgressValue = 0;
 
             RegisterYesNoMessageReceive();
 
@@ -48,6 +53,8 @@ namespace OLXParserWPF.ViewModel
         private int _recordsInDb;
         private int _mainProgressValue;
         private int _mainProgressMaximum;
+        private int _exportProgressValue;
+        private int _exportProgressMaximum;
 
         #endregion
 
@@ -56,32 +63,76 @@ namespace OLXParserWPF.ViewModel
         public string SiteUrl
         {
             get { return _siteUrl; }
-            set { _siteUrl = value; RaisePropertyChanged(() => SiteUrl); }
+            set
+            {
+                _siteUrl = value;
+                RaisePropertyChanged(() => SiteUrl);
+            }
         }
         public int Pages
         {
             get { return _pages; }
-            set { _pages = value; RaisePropertyChanged(() => Pages); }
+            set
+            {
+                _pages = value;
+                RaisePropertyChanged(() => Pages);
+            }
         }
         public bool WindowIsEnabled
         {
             get { return _windowIsEnabled; }
-            set { _windowIsEnabled = value; RaisePropertyChanged(() => WindowIsEnabled); }
+            set
+            {
+                _windowIsEnabled = value;
+                RaisePropertyChanged(() => WindowIsEnabled);
+            }
         }
         public int RecordsInDb
         {
             get { return _recordsInDb; }
-            set { _recordsInDb = value; RaisePropertyChanged(() => RecordsInDb); }
+            set
+            {
+                _recordsInDb = value;
+                RaisePropertyChanged(() => RecordsInDb);
+            }
         }
+
         public int MainProgressValue
         {
             get { return _mainProgressValue; }
-            set { _mainProgressValue = value; RaisePropertyChanged(() => MainProgressValue); }
+            set
+            {
+                _mainProgressValue = value;
+                RaisePropertyChanged(() => MainProgressValue);
+            }
         }
         public int MainProgressMaximum
         {
             get { return _mainProgressMaximum; }
-            set { _mainProgressMaximum = value; RaisePropertyChanged(() => MainProgressMaximum); }
+            set
+            {
+                _mainProgressMaximum = value;
+                RaisePropertyChanged(() => MainProgressMaximum);
+            }
+        }
+
+        public int ExportProgressValue
+        {
+            get { return _exportProgressValue; }
+            set
+            {
+                _exportProgressValue = value;
+                RaisePropertyChanged(() => ExportProgressValue);
+            }
+        }
+        public int ExportProgressMaximum
+        {
+            get { return _exportProgressMaximum; }
+            set
+            {
+                _exportProgressMaximum = value;
+                RaisePropertyChanged(() => ExportProgressMaximum);
+            }
         }
 
         #endregion
@@ -89,13 +140,15 @@ namespace OLXParserWPF.ViewModel
         #region Events
 
         public event EventHandler<string> AlarmToUI;
+
         private void RaiseAlarm(string message)
         {
             DispatcherHelper.CheckBeginInvokeOnUI(() =>
                     AlarmToUI?.Invoke(this, message));
         }
-        
+
         public event EventHandler<string> QuestionYesNo;
+
         private void RaiseQuestionYesNo(string title)
         {
             DispatcherHelper.CheckBeginInvokeOnUI(() =>
@@ -118,6 +171,7 @@ namespace OLXParserWPF.ViewModel
             }
             return url.Remove(math.Index, math.Length);
         }
+
         private void UpdateInfo()
         {
             try
@@ -133,6 +187,7 @@ namespace OLXParserWPF.ViewModel
         #region Commands
 
         private ICommand _startParsingCommand;
+
         public ICommand StartParsingCommand
         {
             get
@@ -143,12 +198,13 @@ namespace OLXParserWPF.ViewModel
         }
 
         private ICommand _clearDbCommand;
+
         public ICommand ClearDbCommand
         {
             get
             {
                 return _clearDbCommand ??
-                    (_clearDbCommand = new RelayCommand(async () => await Task.Run(() => ClearDbStep1())));
+                       (_clearDbCommand = new RelayCommand(async () => await Task.Run(() => ClearDbStep1())));
             }
         }
 
@@ -162,10 +218,11 @@ namespace OLXParserWPF.ViewModel
                 return;
             }
             int count = 0;
-            string error = ""; int errorCount = 0;
+            string error = "";
+            int errorCount = 0;
 
             WindowIsEnabled = false;
-            MainProgressMaximum = advertsOnPage * Pages;
+            MainProgressMaximum = advertsOnPage*Pages;
             MainProgressValue = 0;
             for (int i = 1; i <= Pages; ++i)
             {
@@ -181,7 +238,11 @@ namespace OLXParserWPF.ViewModel
                 {
                     urls = OLXListParser.GetHrefs(url);
                 }
-                catch { ++errorCount; error = "\r\nПроизошла ошибка при взятии ссылок.\r\nКол-во ошибок: " + errorCount; }
+                catch
+                {
+                    ++errorCount;
+                    error = "\r\nПроизошла ошибка при взятии ссылок.\r\nКол-во ошибок: " + errorCount;
+                }
                 foreach (var u in urls)
                     try
                     {
@@ -192,10 +253,16 @@ namespace OLXParserWPF.ViewModel
                         {
                             int advertId = advertRepository.AddAdvert(advert);
                             foreach (var image in images)
-                                imageRepository.AddImage(new OLXParser.DBEntities.Image { sourceurl = image, advertid = advertId });
+                                imageRepository.AddImage(new OLXParser.DBEntities.Image
+                                {
+                                    sourceurl = image,
+                                    advertid = advertId
+                                });
                         }
                     }
-                    catch { }
+                    catch
+                    {
+                    }
                 count += urls.Count;
             }
             UpdateInfo();
@@ -208,12 +275,13 @@ namespace OLXParserWPF.ViewModel
         private void RegisterYesNoMessageReceive()
         {
             Messenger.Default.Register<YesNoMessage>(
-              this,
-              message =>
-              {
-                  ClearDbStep2(message.Message);
-              });
+                this,
+                message =>
+                {
+                    ClearDbStep2(message.Message);
+                });
         }
+
         private void ClearDbStep1()
         {
             if (advertRepository.NumberOfAdverts() <= 0)
@@ -224,6 +292,7 @@ namespace OLXParserWPF.ViewModel
             RaiseQuestionYesNo("Вы действительно хотите удалить все объявления из базы данных?");
             //DialogResult dialogResult = MessageBox.Show("Вы действительно хотите удалить все объявления из базы данных?", "Подтверждение", MessageBoxButtons.YesNo);
         }
+
         private void ClearDbStep2(bool questionResult)
         {
             if (questionResult)
@@ -234,8 +303,46 @@ namespace OLXParserWPF.ViewModel
                     UpdateInfo();
                     RaiseAlarm(string.Format("БД успешно очищена. Удалено {0} строк.", rows));
                 }
-                catch { RaiseAlarm("Произошла ошибка во время попытки очистки БД."); }
+                catch
+                {
+                    RaiseAlarm("Произошла ошибка во время попытки очистки БД.");
+                }
             }
         }
+
+        //private void StartExport()
+        //{
+        //    if (advertRepository.NumberOfAdverts() <= 0)
+        //    {
+        //        RaiseAlarm("Нечего выгружать. БД пуста.");
+        //        return;
+        //    }
+
+        //    FolderBrowserDialog folderBrowserDialog1 = new FolderBrowserDialog();
+        //    DialogResult result = folderBrowserDialog1.ShowDialog();
+        //    if (result == DialogResult.OK)
+        //    {
+        //        ExportProgressMaximum = advertRepository.NumberOfAdverts();
+        //        ExportProgressValue = 0;
+        //        WindowIsEnabled = false;
+
+        //        string foldername = folderBrowserDialog1.SelectedPath;
+        //        var fp = new FilesProcessor(foldername);
+        //        var adverts = advertRepository.GetAdverts();
+        //        string error = null;
+        //        foreach (var advert in adverts)
+        //        {
+        //            ++ExportProgressValue;
+        //            fp.Save(advert, imageRepository.GetImagesByAdvertID(advert.id), out error);
+        //        }
+        //        ExportProgressValue = ExportProgressMaximum;
+        //        if (error != null)
+        //            RaiseAlarm("Ошибка");
+
+        //        Process.Start(folderBrowserDialog1.SelectedPath);
+        //        RaiseAlarm("Процесс выгрузки БД прошел успешно.");
+        //    }
+        //    WindowIsEnabled = true;
+        //}
     }
 }
