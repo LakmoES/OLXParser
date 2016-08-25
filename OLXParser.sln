@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OLXParser", "OLXParser\OLXParser.csproj", "{D0807AF6-51C9-4461-A82C-51134FB4874D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OLXParserWinForms", "OLXParser\OLXParserWinForms.csproj", "{D0807AF6-51C9-4461-A82C-51134FB4874D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{F8175E20-D29A-439F-996A-2D6D170B9404}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OLXParserWPF", "OLXParserWPF\OLXParserWPF.csproj", "{59286B12-DA7B-4408-9BF0-3761D6FB60EE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{D0807AF6-51C9-4461-A82C-51134FB4874D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D0807AF6-51C9-4461-A82C-51134FB4874D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D0807AF6-51C9-4461-A82C-51134FB4874D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8175E20-D29A-439F-996A-2D6D170B9404}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8175E20-D29A-439F-996A-2D6D170B9404}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8175E20-D29A-439F-996A-2D6D170B9404}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8175E20-D29A-439F-996A-2D6D170B9404}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59286B12-DA7B-4408-9BF0-3761D6FB60EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59286B12-DA7B-4408-9BF0-3761D6FB60EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59286B12-DA7B-4408-9BF0-3761D6FB60EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59286B12-DA7B-4408-9BF0-3761D6FB60EE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,9 +1,7 @@
 ﻿using OLXParser.DataBaseConnection;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using Core;
 
 namespace OLXParser
 {
@@ -15,21 +13,13 @@ namespace OLXParser
         [STAThread]
         static void Main()
         {
-            IDBProcessor dbProcessor = new LocalDBProcessor("Data Source = (LocalDB)\\MSSQLLocalDB; AttachDbFilename = |DataDirectory|\\DatabaseMain.mdf");
-            //try
-            //{
-            dbProcessor.OpenConnection();
+            var dbProcessor = Initializer.Init();
 
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(false);
-                Application.Run(new FormMain(dbProcessor));
-            //}
-            //catch(Exception ex) { MessageBox.Show(ex.ToString()); }
-            //finally
-            //{
-            //    dbProcessor.CloseConnection();
-            //}
-            dbProcessor.CloseConnection();
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new FormMain(dbProcessor));
+
+            Initializer.Destroy();
         }
     }
 }

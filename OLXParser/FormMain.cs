@@ -1,15 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
-using CsQuery;
-using System.Net;
 using OLXParser.DataBaseConnection;
 using OLXParser.TableRepositories;
 using OLXParser.Parsers;

@@ -36,10 +36,10 @@
             this.buttonExportDB = new System.Windows.Forms.Button();
             this.buttonClearDB = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.progressBarExport = new System.Windows.Forms.ProgressBar();
             this.labelAdvertCount = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.progressBarMain = new System.Windows.Forms.ProgressBar();
-            this.progressBarExport = new System.Windows.Forms.ProgressBar();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPages)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -134,6 +134,13 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "База данных";
             // 
+            // progressBarExport
+            // 
+            this.progressBarExport.Location = new System.Drawing.Point(6, 59);
+            this.progressBarExport.Name = "progressBarExport";
+            this.progressBarExport.Size = new System.Drawing.Size(75, 23);
+            this.progressBarExport.TabIndex = 9;
+            // 
             // labelAdvertCount
             // 
             this.labelAdvertCount.AutoSize = true;
@@ -159,17 +166,11 @@
             this.progressBarMain.Size = new System.Drawing.Size(126, 23);
             this.progressBarMain.TabIndex = 8;
             // 
-            // progressBarExport
-            // 
-            this.progressBarExport.Location = new System.Drawing.Point(6, 59);
-            this.progressBarExport.Name = "progressBarExport";
-            this.progressBarExport.Size = new System.Drawing.Size(75, 23);
-            this.progressBarExport.TabIndex = 9;
-            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(287, 289);
             this.Controls.Add(this.progressBarMain);
             this.Controls.Add(this.groupBox3);
