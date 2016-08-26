@@ -15,6 +15,8 @@ using System.Windows.Shapes;
 using GalaSoft.MvvmLight.Messaging;
 using OLXParserWPF.Messages;
 using OLXParserWPF.ViewModel;
+using System.Diagnostics;
+using TAlex.WPF.CommonDialogs;
 
 namespace OLXParserWPF
 {
@@ -34,17 +36,46 @@ namespace OLXParserWPF
             var modelView = new MainWindowViewModel();
             this.DataContext = modelView;
             modelView.AlarmToUI += (o, s) => { MessageBox.Show(this, s, "Внимание", MessageBoxButton.OK); };
-            modelView.QuestionYesNo += (o, s) => { SendMessage(s); };
+            modelView.QuestionYesNo += (o, s) => { SendYesNoMessage(s); };
+            modelView.OpenPath += (o, s) => { OpenPath(s); };
+            modelView.SelectPath += (o, s) => { this.SendSelectedPathMessage(s);  };
         }
 
-        public void SendMessage(string title)
+        public void SendYesNoMessage(string title)
         {
             var yesNoMessage = new YesNoMessage();
             {
                 var result = MessageBox.Show(this, title, "Подтверждение", MessageBoxButton.YesNo);
                 yesNoMessage.Message = result == MessageBoxResult.Yes;
-            };
+            }
+            ;
             Messenger.Default.Send(yesNoMessage);
+        }
+
+        private void OpenPath(string path)
+        {
+            try
+            {
+                Process.Start(path);
+            }
+            catch
+            {
+                MessageBox.Show(this, "Не удалось открыть путь", "Ошибка", MessageBoxButton.OK);
+            }
+            
+        }
+        public void SendSelectedPathMessage(string title)
+        {
+            var selectedPathMessage = new SelectedPathMessage();
+            {
+                var folderBrowserDialog = new FolderBrowserDialog();
+                folderBrowserDialog.Description = title;
+                var result = folderBrowserDialog.ShowDialog();
+                selectedPathMessage.Result = result ?? false;
+                if (result != null && result == true)
+                    selectedPathMessage.Path = folderBrowserDialog.SelectedPath;
+            };
+            Messenger.Default.Send(selectedPathMessage);
         }
     }
 }

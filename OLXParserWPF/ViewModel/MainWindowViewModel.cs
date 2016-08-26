@@ -31,6 +31,7 @@ namespace OLXParserWPF.ViewModel
             ExportProgressValue = 0;
 
             RegisterYesNoMessageReceive();
+            RegisterSelectedPathMessageReceive();
 
             var dbProcessor = Initializer.Init();
 
@@ -155,6 +156,22 @@ namespace OLXParserWPF.ViewModel
                     QuestionYesNo?.Invoke(this, title));
         }
 
+        public event EventHandler<string> OpenPath;
+
+        private void RaiseOpenPath(string path)
+        {
+            DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                    OpenPath?.Invoke(this, path));
+        }
+
+        public event EventHandler<string> SelectPath;
+
+        private void RaiseSelectPath(string title)
+        {
+            DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                    SelectPath?.Invoke(this, title));
+        }
+
         #endregion
 
         private static string RemovePageFromUrl(string url)
@@ -197,14 +214,25 @@ namespace OLXParserWPF.ViewModel
             }
         }
 
-        private ICommand _clearDbCommand;
+        private ICommand _cleanDbCommand;
 
-        public ICommand ClearDbCommand
+        public ICommand CleanDbCommand
         {
             get
             {
-                return _clearDbCommand ??
-                       (_clearDbCommand = new RelayCommand(async () => await Task.Run(() => ClearDbStep1())));
+                return _cleanDbCommand ??
+                       (_cleanDbCommand = new RelayCommand(async () => await Task.Run(() => CheckDbForCleaning())));
+            }
+        }
+
+        private ICommand _exportDbCommand;
+
+        public ICommand ExportDbCommand
+        {
+            get
+            {
+                return _exportDbCommand ??
+                       (_exportDbCommand = new RelayCommand(async () => await Task.Run(() => CheckDbForExport())));
             }
         }
 
@@ -262,6 +290,7 @@ namespace OLXParserWPF.ViewModel
                     }
                     catch
                     {
+                        // ignored
                     }
                 count += urls.Count;
             }
@@ -278,11 +307,21 @@ namespace OLXParserWPF.ViewModel
                 this,
                 message =>
                 {
-                    ClearDbStep2(message.Message);
+                    ClearDb(message.Message);
                 });
         }
 
-        private void ClearDbStep1()
+        private void RegisterSelectedPathMessageReceive()
+        {
+            Messenger.Default.Register<SelectedPathMessage>(
+                this,
+                message =>
+                {
+                    Task.Run(() => ExportDb(message.Result, message.Path));
+                });
+        }
+
+        private void CheckDbForCleaning()
         {
             if (advertRepository.NumberOfAdverts() <= 0)
             {
@@ -293,7 +332,7 @@ namespace OLXParserWPF.ViewModel
             //DialogResult dialogResult = MessageBox.Show("Вы действительно хотите удалить все объявления из базы данных?", "Подтверждение", MessageBoxButtons.YesNo);
         }
 
-        private void ClearDbStep2(bool questionResult)
+        private void ClearDb(bool questionResult)
         {
             if (questionResult)
             {
@@ -310,39 +349,41 @@ namespace OLXParserWPF.ViewModel
             }
         }
 
-        //private void StartExport()
-        //{
-        //    if (advertRepository.NumberOfAdverts() <= 0)
-        //    {
-        //        RaiseAlarm("Нечего выгружать. БД пуста.");
-        //        return;
-        //    }
+        private void CheckDbForExport()
+        {
+            if (advertRepository.NumberOfAdverts() <= 0)
+            {
+                RaiseAlarm("Нечего выгружать. БД пуста.");
+                return;
+            }
+            RaiseSelectPath("Выберите папку для экспорта.");
+        }
 
-        //    FolderBrowserDialog folderBrowserDialog1 = new FolderBrowserDialog();
-        //    DialogResult result = folderBrowserDialog1.ShowDialog();
-        //    if (result == DialogResult.OK)
-        //    {
-        //        ExportProgressMaximum = advertRepository.NumberOfAdverts();
-        //        ExportProgressValue = 0;
-        //        WindowIsEnabled = false;
+        private void ExportDb(bool questionResult, string selectedPath)
+        {
+            if (questionResult)
+            {
+                ExportProgressMaximum = advertRepository.NumberOfAdverts();
+                ExportProgressValue = 0;
+                WindowIsEnabled = false;
 
-        //        string foldername = folderBrowserDialog1.SelectedPath;
-        //        var fp = new FilesProcessor(foldername);
-        //        var adverts = advertRepository.GetAdverts();
-        //        string error = null;
-        //        foreach (var advert in adverts)
-        //        {
-        //            ++ExportProgressValue;
-        //            fp.Save(advert, imageRepository.GetImagesByAdvertID(advert.id), out error);
-        //        }
-        //        ExportProgressValue = ExportProgressMaximum;
-        //        if (error != null)
-        //            RaiseAlarm("Ошибка");
+                string foldername = selectedPath;
+                var fp = new FilesProcessor(foldername);
+                var adverts = advertRepository.GetAdverts();
+                string error = null;
+                foreach (var advert in adverts)
+                {
+                    ++ExportProgressValue;
+                    fp.Save(advert, imageRepository.GetImagesByAdvertID(advert.id), out error);
+                }
+                ExportProgressValue = ExportProgressMaximum;
+                if (error != null)
+                    RaiseAlarm("Ошибка");
 
-        //        Process.Start(folderBrowserDialog1.SelectedPath);
-        //        RaiseAlarm("Процесс выгрузки БД прошел успешно.");
-        //    }
-        //    WindowIsEnabled = true;
-        //}
+                RaiseOpenPath(selectedPath);
+                RaiseAlarm("Процесс выгрузки БД прошел успешно.");
+            }
+            WindowIsEnabled = true;
+        }
     }
 }
